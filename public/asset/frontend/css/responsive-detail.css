@@ -1,0 +1,233 @@
+@media( min-width: 450px) {
+#main{
+    margin-top: 150px;
+}
+    .lable-cat{
+        display: inline-block;
+    }
+    .socials{
+        flex-basis: 60%;
+        margin: 0;
+    }
+    .new-author{
+        flex-basis: 40%;
+    }
+    .new-some-infor{
+        margin-bottom: 43px;
+    }
+    .new-title{
+        font-size: 2rem;
+        line-height: 48px;
+    }
+    .new-body-sub-imgs{
+        justify-content: space-between;
+    }
+    .new-body-sub-imgs_sub{
+        margin-top: 0px;
+    }
+    .new-body-sub-imgs_sub-item{
+        width: 100%;
+    }
+    .new-body-sub-imgs_sub-item:first-child{
+        margin-bottom: 16px;
+
+    }
+    .new-body-sub-imgs_main{
+        width: 58%;
+    }
+    .new-body-sub-imgs_sub{
+        width: 40%;
+        flex-direction: column;
+    }
+    .new-body-img{
+        height:unset;
+    }
+    .new-body-sub-standard li {
+        font-size: 1rem;
+        line-height: 28px;
+
+    }
+    .keywords-item{
+        font-size: 15px;
+        line-height: 22px;
+        padding: 4px 24px;
+    }
+    .posts-item-img-big{
+        display: block;
+        width: 40%;
+        position: relative;
+    }
+    .posts-item-infor{
+        width: 57%;
+    }
+    .posts-item-desc-big{
+        display: block;
+    }
+    .posts-item-desc-content{
+        width: 100%;
+    }
+    .posts-item-desc{
+        display: none;
+    }
+    .posts-item{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .post-icon-fav{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 25px;
+    }
+
+    .posts-item-title{
+        font-size: 1.125rem;
+        line-height: 27px;
+        color: #3B4144;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .new-item-cat,
+    .new-item-author,
+    .new-item-cre-at{
+        font-size: 0.9375rem;
+    }
+    .posts-item-desc-big .posts-item-desc-content{
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 28px;
+        opacity: 0.5;
+        -webkit-line-clamp: 4;
+    }
+    .post-label-see-all{
+        display: inline-block;
+    }
+    .post-label-see-next{
+        display: none;
+    }
+}
+@media (min-width: 450px ) and (max-width: 768px) {
+    .header-user-icon {
+        margin-right: 28px;
+    }
+
+    .user-infor {
+        display: block;
+
+    }
+
+    .logo-img {
+        height: 24px;
+        width: 140px;
+    }
+}
+@media (min-width: 769px)
+{
+    #container {
+        padding: 0 44px;
+}
+    .social-link-label{
+        display: inline-block;
+    }
+    .new-some-infor{
+        margin-bottom: 43px;
+    }
+    .post-label-cat{
+        padding: 0px 36px;
+    }
+    .new-body-main-content p{
+        margin-bottom: 36px;
+    }
+    .new-body-sub-imgs{
+        margin-bottom: 36px;
+    }
+    .new-item-author::before,
+    .new-item-author::after{
+        transform: translateY(-100%);
+    }
+    .posts-item{
+        margin-bottom: 36px;
+    }
+}
+@media (min-width: 769px ) and (max-width: 1027px)
+{
+    .header-user-icon{
+        margin-right: 28px;
+    }
+    .user-infor{
+        display: block;
+
+    }
+    .logo-img{
+        height: 24px;
+        width: 140px;
+    }
+    .social-link-mail{
+        padding: 6px 20px;
+    }
+
+}
+@media (min-width: 1028px) {
+
+    #main {
+        margin-top: 150px;
+        padding: 0 200px;
+    }
+    #header{
+        padding: 30px 44px;
+    }
+
+    .header-nav-menu-icon {
+        display: none;
+    }
+
+    .header-nav {
+        flex: 0 0 30%;
+    }
+
+    .header-nav-main {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .logo {
+        flex: 1;
+        text-align: center;
+
+    }
+
+    .header-user {
+        flex: 0 0 30%;
+    }
+    .header-user-icon-notify{
+        /*display: none;*/
+    }
+
+    .header-post-link {
+        display: inline-block;
+    }
+
+    .header-user-icon {
+        margin-right: 28px;
+    }
+
+    .user-infor {
+        display: block;
+
+    }
+
+    .logo-img {
+        height: 24px;
+        width: 140px;
+    }
+}
+@media (min-width: 1400px)
+{
+    #main{
+        padding: 0 250px;
+    }
+}
