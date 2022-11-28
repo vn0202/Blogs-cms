@@ -5,18 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 
 use mysql_xdevapi\Exception;
+use Psy\Output\ProcOutputPager;
 
 class CategoryController extends Controller
 {
     //
     public function index(Request $request)
     {
+
         $search = $request->search ?? '';
         $isFilter = false;
         if($search != ''){
@@ -71,7 +74,7 @@ class CategoryController extends Controller
             ->with('childrenCategories')
             ->get();
         $cat = Category::find($id);
-        $cat_title = isset($cat->category_id) ? Category::find($cat->category_id)->title : " Danh mục gốc";
+        $cat_title = isset($cat->category_id) ? $cat->childItSelf->title : " Danh mục gốc";
 
         return view('admin.category.edit', compact('categories', 'cat', 'title', 'cat_title'));
     }

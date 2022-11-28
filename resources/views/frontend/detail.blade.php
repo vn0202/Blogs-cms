@@ -47,9 +47,9 @@
                         {!! $post->content !!}
                     </div>
 
-                    <ul class="keywords">
+                    <ul class="keywords" style="display:flex; flex-wrap: wrap;align-items: center">
                         @foreach($post->tags as $tag)
-                            <li class="keywords-item">
+                            <li class="keywords-item" style="margin-bottom: 12px">
                                 <a href="{{route('frontend.list-post-tag',$tag->slug)}}"> {{$tag->name}}</a>
                                </li>
 
@@ -88,6 +88,8 @@
                                     <a href="{{route('frontend.list-post-by-category',$post->categories->slug)}}"> <span class="new-item-cat">{{$post->categories->title}}</span></a>
                                     <span class="new-item-author">{{$post->user->fullname}}</span>
                                     <span class="new-item-cre-at">{{date_format($post->created_at,'d-m-Y')}}</span>
+                                    <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$post->views}}</span>
+
                                 </p>
                                 <div class="posts-item-desc-big">
 

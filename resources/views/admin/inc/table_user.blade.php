@@ -1,15 +1,4 @@
-<table class="table table-hover text-wrap bg-white ">
-<thead>
-    <tr>
-        <th style="width: 50px;">ID</th>
-        <th class="sorting" data-id="1">Họ và tên:</th>
-        <th class="sorting" data-id="2">Tên đăng nhập</th>
-        <th class="sorting" data-id="3">Email</th>
-        <th class="sorting" data-id="4">Role</th>
-        <th style="width: 150px;">Option</th>
-    </tr>
-    </thead>
-    <tbody>
+
 
     @foreach($users as $key => $user)
         <tr>
@@ -33,6 +22,11 @@
 
         </tr>
     @endforeach
-    </tbody>
-   </table>
+<tr style="width:100%; ">
+    <td colspan="3" align="center" >
+{!! $users->links() !!}
+    </td>
+</tr>
+
+
 

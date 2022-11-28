@@ -50,8 +50,8 @@
                     <td>{{$category->id}}</td>
                     <td>{{$category->title}}</td>
                     <td>{{$category->slug}}</td>
-                    <td>{{\App\Models\Category::find($category->id)->title ?? "Danh mục gốc "}}</td>
-                    <td>{{\App\Models\User::find($category->creator)->fullname}}</td>
+                    <td>{{$category->childItSelf->title?? "Danh mục gốc "}}</td>
+                    <td>{{$category->user->fullname}}</td>
                     <td>{{date($category->created_at)}}</td>
                     <td>{{$category->updated_at}}</td>
 

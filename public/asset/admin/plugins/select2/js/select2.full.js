@@ -5461,7 +5461,7 @@ S2.define('select2/core',[
     }
 
     id = id.replace(/(:|\.|\[|\]|,)/g, '');
-    id = 'select2-' + id;
+    id = 'select2' + id;
 
     return id;
   };
@@ -6034,7 +6034,7 @@ S2.define('select2/compat/utils',[
 
       $(classes.split(/\s+/)).each(function () {
         // Save all Select2 classes
-        if (this.indexOf('select2-') === 0) {
+        if (this.indexOf('select2') === 0) {
           replacements.push(this);
         }
       });
@@ -6047,7 +6047,7 @@ S2.define('select2/compat/utils',[
 
       $(classes.split(/\s+/)).each(function () {
         // Only adapt non-Select2 classes
-        if (this.indexOf('select2-') !== 0) {
+        if (this.indexOf('select2') !== 0) {
           adapted = adapter(this);
 
           if (adapted != null) {

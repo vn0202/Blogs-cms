@@ -95,7 +95,9 @@
                 @if(session('success'))
                     <p class="alert-success text-center">{{session('success')}}</p>
                 @endif
+
                 <form id="quickForm" action="" method="POST" enctype="multipart/form-data">
+
                     <div class="card-body">
                         <div class="form-group">
                             <label for="title">Title</label>
@@ -116,14 +118,11 @@
                                        </div>
                                        <p class="add-tag text-purple">+add</p>
                                    </div>
-                            <input type="text" name="tag" id="tag" class="form-control"
-                                   placeholder="choose tag"/>
-                            <ul id="list-tag" class="list-tag">
-                                @foreach($tags as $tag)
-                                    <li class="list-tag-item" data-value="{{$tag->name}}"
-                                        data-id="{{$tag->id}}">{{$tag->name}}</li>
-                                @endforeach
-                            </ul>
+
+                            <select class="js-example-basic-multiple form-control" name="tagcheck[]" multiple="multiple" id="mySelect2">
+                                         <option value="0">--select items--</option>
+                            </select>
+
 
                         </div>
                         <div class="form-group ">
@@ -157,15 +156,17 @@
                         @enderror
                         <div class="form-group">
                             <label for="description">Mô tả ngắn</label>
-                            <input value="{{ old('description') }}" type="text" name="description" class="form-control"
-                                   id="description" placeholder="Enter description">
+                            <textarea  type="text" name="description" class="form-control ckeditor"
+                                    placeholder="Enter description">
+                          {{ old('description') }}
+                            </textarea>
                         </div>
                         @error('description')
                         <p class="text-danger text-center">{{$message}}</p>
                         @enderror
                         <div class="form-group">
                             <label for="content">Nội dung: </label>
-                            <textarea name="content" id="content" class="form-control"
+                            <textarea name="content"  class="form-control ckeditor"
                                       placeholder="Enter content">{{old('content')}}</textarea>
                         </div>
                         @error('content')
@@ -221,6 +222,10 @@
         };
 
         $(document).ready(function () {
+            //select 2
+
+
+
             $('.add-tag').click(function(){
                 $('.model-over').css('display','flex');
             })
@@ -262,41 +267,7 @@
             });
 
 
-            $('#tag').keyup(function (e) {
-                let searchValue = $(this).val();
 
-                $.ajax({
-                    url: "{{route('admin.posts.filter-post')}}",
-                    method: "GET",
-                    data: {
-                        search: searchValue,
-                        type: 2,
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.length == 0) {
-                            $('.list-tag').empty();
-                            $('.list-tag').append('<li class="text-center">No result</li>')
-                        } else {
-                            let len = response.length;
-                            let html = '';
-                            for (var i = 0; i < len; i++) {
-                                html += `<li class= "py-2 list-tag-item" data-id="${response.id}">
-                                    <a href="${url}?tag_id=${response[i].id}" class="text-dark d-block">${response[i].name}</a>
-                                         </li>`
-                            }
-                            $('.list-tag').empty();
-                            $('.list-tag').append(html);
-
-                            // addevent('.list-tag-item');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        alert(error)
-                    }
-
-                })
-            })
 
             $('#tag').focusin(function (event) {
                 $('#list-tag').slideDown();
@@ -320,33 +291,26 @@
                     $("#list-tag").slideUp();
                 }
             });
+
+
             $('#submit-add-tag').click(function (e){
                 e.preventDefault();
                 let val = $('#model_title').val();
                 if(!val.trim())
                 {
                     $('.card-body').append(`<p class='text-danger text-center'  >Ban chua nhap ten tag</p>`)
-
                 }
                 else {
                     $.ajax({
                         url: "{{route('admin.tags.create-tag')}}",
-
                         method: 'POST',
                         data: {
-                            title: val,
+                            search: val,
                             _token: "{{csrf_token()}}"
                         },
-                        dataType: 'text',
+                        dataType: 'json',
                         success: function (response) {
-                            let html = `<li class="list-tag-choose-item">
-                            <input type=text name=tagcheck[] checked value=${response} hidden>${val}</li>`
-                            $('.list-tag-choose').append(html);
                             $('.model-over').css('display','none');
-                            $('.list-tag-choose-item').click(function(){
-                                $(this).remove();
-                            });
-
 
                         },
 
@@ -360,13 +324,7 @@
 
 
         })
-        // var lists = document.getElementsByClassName('list-tag-choose-item');
-        //       for (var i = 0 ; i < lists.length ; i++)
-        //       {
-        //           lists[i].onclick = function (){
-        //               this.remove();
-        //           }
-        //       }
+
 
     </script>
     <script src="{{asset('asset/js/handle_list_category.js')}}"></script>

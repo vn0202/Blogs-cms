@@ -23,6 +23,7 @@
     </div>
     <!-- /.login-logo -->
     <div class="card">
+
         <div class="card-body login-card-body">
             <p class="login-box-msg">Sign in to start your session</p>
             @error('failure')
@@ -79,7 +80,7 @@
                 <a href="#" class="btn btn-block btn-primary">
                     <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
                 </a>
-                <a href="#" class="btn btn-block btn-danger">
+                <a href="{{route('frontend.google-auth')}}" class="btn btn-block btn-danger">
                     <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
                 </a>
             </div>

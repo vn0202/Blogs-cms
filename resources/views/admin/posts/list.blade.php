@@ -9,26 +9,27 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
+
         .limit-line-1 {
             overflow: hidden;
             display: block;
             display: -webkit-box;
-            line-height:1.8rem;
-            height:3rem;
+            line-height: 1.8rem;
+            height: 3rem;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
 
         }
 
-        .list-categories-item,.list-tag-item {
+        .list-categories-item, .list-tag-item {
             padding-left: 8px;
         }
 
-        .list-categories-item.item-active,.list-tag-item.item-active {
+        .list-categories-item.item-active, .list-tag-item.item-active {
             background-color: #007bff;
         }
 
-        .category-drop,.tag-drop {
+        .category-drop, .tag-drop {
             display: none;
             padding: 40px 0 20px;
         }
@@ -51,8 +52,8 @@
                 <p>Thêm</p>
             </a>
             <p class="ml-4">Show {{$posts->firstItem()}} to {{$posts->lastItem()}} of {{$posts->total()}} entires
-            @if($isFilter)
-                ( filter of {{$posts->total()}} entires )
+                @if($isFilter)
+                    ( filter of {{$posts->total()}} entires )
                 @endif
             </p>
             <a href="{{route('admin.posts.index')}}" class="ml-4 text-purple text-decoration-underline col-3">Reset</a>
@@ -76,7 +77,8 @@
                 <ul class=" list-categories overflow-auto " style="padding:0; max-height: 250px; ">
                     @forelse(\App\Models\Category::all() as $cat)
                         <li class="py-2 list-categories-item" data-id="{{$cat->id}}">
-                            <a href="{{Request::fullUrlWithQuery(['category_id'=>$cat->id])}}" class="text-dark w-100 d-block">{{$cat->title}}</a>
+                            <a href="{{Request::fullUrlWithQuery(['category_id'=>$cat->id])}}"
+                               class="text-dark w-100 d-block">{{$cat->title}}</a>
                         </li>
                         @endforeach
                 </ul>
@@ -90,92 +92,59 @@
                 <ul class=" list-tags overflow-auto bg-white " style="padding:0; max-height: 250px; ">
                     @forelse(\App\Models\Tag::all() as $tag)
                         <li class="py-2 list-tag-item" data-id="{{$tag->id}}">
-                            <a href="{{Request::fullUrlWithQuery(['tag_id'=>$tag->id])}}" class="text-dark d-block">{{$tag->name}}</a>
+                            <a href="{{Request::fullUrlWithQuery(['tag_id'=>$tag->id])}}"
+                               class="text-dark d-block">{{$tag->name}}</a>
                         </li>
                         @endforeach
                 </ul>
             </div>
         </div>
     </div>
-
-    <div id="crudTable_wrapper" class="mb-2">
-        @if($posts->count())
-        <table class="table table-hover text-wrap bg-white ">
-            <thead>
-            <tr>
-                <th style="width: 50px;">ID</th>
-                <th style="width:500px">Tiêu đề</th>
-                <th>Tác giả</th>
-                <th>Thể loại</th>
-                <th>Kích hoạt</th>
-                <th>Ngay xuat ban</th>
-                <th style="width: 150px;">Option</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            @foreach($posts as $key => $post)
-                <tr>
-                    <td>{{$post->id}}</td>
-                    <td class="limit-line-1"  >{{$post->title}}</td>
-                    <td>{{\App\Models\User::find($post->author)->fullname}}</td>
-                    <td>{{\App\Models\Category::find($post->category)->title}}</td>
-                    <td>{{$post->active == 0 ? "DRAF" : "PUBLISHED"}}</td>
-                    <td>{{$post->created_at}}</td>
-                    <td>
-                        <a class="btn btn-info btn-sm" href="{{route('admin.posts.show-post',$post->id)}}">
-                            <i class="fa fa-eye"></i>
-                        </a>
-                        <a class="btn btn-primary btn-sm" href="{{route('admin.posts.edit-post',$post->id)}}">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a href="{{route('admin.posts.delete-post',$post->id)}}" class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc muốn xóa bài viểt này không? ')">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-        @else
-            <p class="text-center  bg-white">
-                Không tồn tại bài viết nào!
-            </p>
-        @endif
-        <div class="row mt-2 justify-content-end">
-            <div class="col-sm-12 col-md-4">
-                {!! $posts->links() !!}
-            </div>
-        </div>
+    <div id="data-table">
+        @include('admin.inc.post_data')
     </div>
-
 
 @endsection
 @section('script')
     <script>
-                  function addevent( select  ){
-                      let list_items = $(`${select}`);
-                      list_items.hover(function () {
-                          for (var i = 0; i < list_items.length; i++) {
+        function addevent(select) {
+            let list_items = $(`${select}`);
+            list_items.hover(function () {
+                for (var i = 0; i < list_items.length; i++) {
+                    list_items[i].classList.remove('item-active');
+                }
+                $(this).addClass('item-active');
+            })
+        }
 
-                              list_items[i].classList.remove('item-active');
-                          }
-                          $(this).addClass('item-active');
-
-                      })
-
-                  }
         $(document).ready(function () {
+            //handle pagination without reload page
+            $(document).on('click', '.pagination a', function (event) {
+                event.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+                getMorePosts(page);
+            })
+
+            function getMorePosts(page) {
+                $.ajax({
+                    url: "{{route('admin.posts.get-more-post')}}" + "?page=" + page,
+                    type: "GET",
+                    success: function (data) {
+                        $('#data-table').html(data);
+                    }
+                })
+            }
+            //end handle
+
+            //handle filter
+
+            $(document).mouseup(function (e) {
 
 
-            $(document).mouseup(function (e){
-                if($(e.target).closest('.category-drop').length == 0)
-                {
+                if ($(e.target).closest('.category-drop').length == 0) {
                     $('.category-drop').css('display', 'none')
                 }
-                if($(e.target).closest('.tag-drop').length === 0)
-                {
+                if ($(e.target).closest('.tag-drop').length === 0) {
                     $('.tag-drop').css('display', 'none')
                 }
 
@@ -183,18 +152,18 @@
             $('.filter-category').click(function () {
                 $('.category-drop').css('display', 'block')
             })
-            $('.filter-tag').click(function (){
+            $('.filter-tag').click(function () {
 
                 $('.tag-drop').css('display', 'block')
 
             })
             $('.list-categories-item:first-child').addClass('item-active');
-           addevent('.list-categories-item');
-           addevent('.list-tag-item')
+            addevent('.list-categories-item');
+            addevent('.list-tag-item')
             let url = "{{route('admin.posts.index')}}";
+            //handle search by cat
             $('#search-cat').keyup(function (e) {
                 let searchValue = $(this).val();
-
                 $.ajax({
                     url: "{{route('admin.posts.filter-post')}}",
                     method: "GET",
@@ -204,6 +173,8 @@
                     },
                     dataType: 'json',
                     success: function (response) {
+                        let queryString = new URL(window.location.href);
+
                         if (response.length == 0) {
                             $('.list-categories').empty();
                             $('.list-categories').append('<li class="text-center">No result</li>')
@@ -211,14 +182,16 @@
                             let len = response.length;
                             let html = '';
                             for (var i = 0; i < len; i++) {
+                                queryString.searchParams.set('category_id', response[i].id);
+                                let newUrl = queryString.href;
                                 html += `<li class= "py-2 list-categories-item" data-id="${response[i].id}">
-                                     <a href="${url}?category_id=${response[i].id}" class="text-dark d-block"> ${response[i].title}</a>
+                                     <a href="${newUrl}" class="text-dark d-block"> ${response[i].title}</a>
                                          </li>`
                             }
                             $('.list-categories').empty();
                             $('.list-categories').append(html);
                             let list_items = $('.list-categories-item');
-                        addevent('.list-categories-item');
+                            addevent('.list-categories-item');
                         }
                     },
                     error: function (xhr, status, error) {
@@ -227,6 +200,7 @@
 
                 })
             })
+            //hanhle filter by tag
             $('#search-tag').keyup(function (e) {
                 let searchValue = $(this).val();
 
@@ -239,6 +213,7 @@
                     },
                     dataType: 'json',
                     success: function (response) {
+                        let queryString = new URL(window.location.href);
                         if (response.length == 0) {
                             $('.list-tags').empty();
                             $('.list-tags').append('<li class="text-center">No result</li>')
@@ -246,8 +221,10 @@
                             let len = response.length;
                             let html = '';
                             for (var i = 0; i < len; i++) {
+                                queryString.searchParams.set('tag_id', response[i].id);
+                                let newUrl = queryString.href;
                                 html += `<li class= "py-2 list-tag-item" data-id="${response.id}">
-                                    <a href="${url}?tag_id=${response[i].id}" class="text-dark d-block">${response[i].name}</a>
+                                    <a href="${newUrl}" class="text-dark d-block">${response[i].name}</a>
                                          </li>`
                             }
                             $('.list-tags').empty();
@@ -262,9 +239,8 @@
 
                 })
             })
-            $('.list-categories-item').click(function (){
-                $('.category-drop').css('display','none');
-
+            $('.list-categories-item').click(function () {
+                $('.category-drop').css('display', 'none');
             })
 
         })
