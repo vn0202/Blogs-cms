@@ -18,8 +18,8 @@ return new class extends Migration
 
             $table->string('title');
             $table->unsignedBigInteger('category_id')->nullable();
-            $table->integer('creator');
-            $table->string('slug');
+            $table->unsignedBigInteger('creator');
+            $table->string('slug')->unique();
             $table->foreign('creator')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();

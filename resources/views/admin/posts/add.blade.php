@@ -119,8 +119,8 @@
                                        <p class="add-tag text-purple">+add</p>
                                    </div>
 
-                            <select class="js-example-basic-multiple form-control" name="tagcheck[]" multiple="multiple" id="mySelect2">
-                                         <option value="0">--select items--</option>
+                            <select class="js-example-basic-multiple form-control" name="tagcheck[]" multiple="multiple" id="mySelect2Tag">
+
                             </select>
 
 
@@ -223,9 +223,6 @@
 
         $(document).ready(function () {
             //select 2
-
-
-
             $('.add-tag').click(function(){
                 $('.model-over').css('display','flex');
             })
@@ -291,8 +288,6 @@
                     $("#list-tag").slideUp();
                 }
             });
-
-
             $('#submit-add-tag').click(function (e){
                 e.preventDefault();
                 let val = $('#model_title').val();

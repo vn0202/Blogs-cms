@@ -6,7 +6,9 @@ use App\Http\Controllers\Frontend\Auth\UserLoginController;
 use App\Http\Controllers\Frontend\Auth\RegisterController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Frontend\Auth\LoginByGoogleController;
-    Route::name('frontend.')->prefix('/')
+use Laravel\Socialite\Facades\Socialite;
+
+Route::name('frontend.')->prefix('/')
         ->group(function(){
             Route::get('/',[MainController::class,'index'])->name('home');
             Route::get('/get-more-posts',[MainController::class,'getMorePosts'])->name('get-more-posts');
@@ -27,5 +29,8 @@ use App\Http\Controllers\Frontend\Auth\LoginByGoogleController;
             Route::get('/tag/{slug}',[MainController::class,'list_post_by_tag'])->name('list-post-tag');
 
             Route::get('auth/google',[LoginByGoogleController::class,'redirect'])->name('google-auth');
-            Route::get('auth/google/call-back',[LoginByGoogleController::class,'callbackGoogle']);
+            Route::get('auth/google/callback',[LoginByGoogleController::class,'callbackGoogle']);
+
+
+
         });

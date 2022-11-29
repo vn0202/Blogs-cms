@@ -20,9 +20,9 @@ return new class extends Migration
             $table->longText('content');
             $table->string('slug')->nullable();
             $table->unsignedBigInteger('category');
-            $table->integer('author');
+            $table->unsignedBigInteger('author');
             $table->string('thumb')->nullable();
-            $table->integer('approvor')->nullable();
+            $table->unsignedBigInteger('approvor')->nullable();
             $table->enum('active',[0,1])->default(0);
             $table->timestamps();
             $table->foreign('category')->references('id')->on('categories');

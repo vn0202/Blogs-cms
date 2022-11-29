@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Http\Controllers\Controller;
-use http\Client\Curl\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -20,16 +20,27 @@ class LoginByGoogleController extends Controller
     {
         try {
             $google_user = Socialite::driver('google')->user();
-
-            $user = User::where('google_id',$google_user->getId())->get();
+            $user = User::where('google_id',$google_user->getId())->first();
             if(!$user){
-               $new_user = User::create([
-                   'fullname'=>$google_user->getName(),
-                   'name'=>$google_user->getNickname(),
-                   'email'=>$google_user->getEmail(),
-                   'google_id'=>$google_user->getId(),
-                   'avatar'=>$google_user->getAvatar(),
-               ]);
+                //check whether this email have registered
+                //if it has registered, update its google_id
+                $new_user =User::where('email',$google_user->getEmail())->first();
+                if($new_user)
+                {
+                    $new_user->google_id = $google_user->getId();
+                    $new_user->save();
+                }
+                //if not, register a new user
+                else{
+                    $new_user = new User();
+                    $new_user->fullname = $google_user->getName();
+                    $new_user->name = $google_user->getName();
+                    $new_user->email = $google_user->getEmail();
+                    $new_user->avatar = $google_user->getAvatar();
+                    $new_user->google_id = $google_user->getId();
+                    $new_user->save();
+                }
+
                 Auth::login($new_user);
                 return redirect()->route('frontend.home');
             }
@@ -40,7 +51,6 @@ class LoginByGoogleController extends Controller
 
 
         } catch (\Throwable $th) {
-
         }
     }
 

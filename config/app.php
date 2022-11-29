@@ -182,6 +182,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+//        Laravel\Socialite\SocialiteServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -211,6 +212,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
+//        'Socialite'=>Laravel\Socialite\SocialiteServiceProvider::class,
     ])->toArray(),
 
 ];
