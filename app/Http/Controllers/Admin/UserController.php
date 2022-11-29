@@ -12,10 +12,16 @@ class UserController extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
         $title = "Danh sách người dùng";
+
+        if($request->search){
+            $users = User::where('fullname','like',"%$request->search%")->paginate(10);
+        }
+        else{
             $users = User::paginate(10);
+        }
         return view('admin.users.index', compact('title', 'users'));
     }
 
@@ -60,20 +66,14 @@ class UserController extends Controller
         return back()->with('success', "Created");
     }
 
-    public function sort()
+    public function sort(Request $request)
     {
-        $id = $_POST['id'];
-        $type = $_POST['type'];
-        if ($id == 1) {
-            $users = User::orderBy('fullname', $type)->orderBy('id')->paginate(10);
-        } elseif ($id == 2) {
-            $users = User::orderBy('name', $type)->paginate(10);
-        } elseif ($id == 3) {
-            $users = User::orderBy('email', $type)->paginate(10);
-        } else {
-            $users = User::orderBy('role', $type)->paginate(10);
-        }
-        return json_encode($users);
+       if($request->ajax()){
+           $sort_by = $request->sortBy;
+           $type = $request->sortType;
+           $users = User::orderBy($sort_by,$type)->paginate(10);
+           return view('admin.inc.table_user',compact('users'))->render();
+       }
 
     }
 

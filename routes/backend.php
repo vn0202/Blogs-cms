@@ -46,7 +46,7 @@ Route::name('admin.')->prefix('/admin')
                 Route::get('/destroy/{id}',[UserController::class,'delete_user'])->name('delete-user');
                 Route::get('/them-nguoi-dung',[UserController::class,'create'])->name('create');
                 Route::post('/them-nguoi-dung',[UserController::class,'store'])->name('store');
-                Route::post('/danh-sach-nguoi-dung',[UserController::class,'sort'])->name('sort');
+                Route::get('/sap-xep-danh-sach-nguoi-dung',[UserController::class,'sort'])->name('sort');
             });
 
         //Category and post
@@ -69,6 +69,7 @@ Route::name('admin.')->prefix('/admin')
                 Route::post('/edit-post/{id}',[PostController::class,'handleEdit'])->name('handle-edit');
                 Route::get('/destroy-post/{id}',[PostController::class,'delete'])->name('delete-post');
                 Route::get('/filter-post',[PostController::class,'filter'])->name('filter-post');
+                Route::get('/get-more-post',[PostController::class,'getMorePosts'])->name('get-more-post');
             });
         Route::prefix('/tags')->name('tags.')
             ->group(function (){
@@ -78,6 +79,8 @@ Route::name('admin.')->prefix('/admin')
                 Route::get('/edit-tag/{id}',[TagController::class,'edit'])->name('edit-tag');
                 Route::post('/edit-tag/{id}',[TagController::class,'handleEdit'])->name('handle-edit');
                 Route::get('/delete-tag/{id}',[TagController::class,'delete'])->name('delete-tag');
+                Route::post('/get-list-tag',[TagController::class,'get_list_tag'])->name('get-list-tag');
+                Route::get('/get-list-tag/{post_id}',[TagController::class,'get_available_tags'])->name('get-tags');
             });
 
 

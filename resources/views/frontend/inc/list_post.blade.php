@@ -1,17 +1,11 @@
 <div class="posts">
     <p class="posts-label">Danh sách tin: </p>
 
-    @php
-        $i=0;
-    @endphp
+
     <div class="list-posts">
     @foreach($posts as $post)
-{{--        @php--}}
-{{--            if($i == 5)--}}
-{{--               { break;}--}}
-{{--            $i++;--}}
-{{--        @endphp--}}
-        <div class="posts-item" data-id="{{$i}}">
+
+        <div class="posts-item" >
 
             <div class="posts-item-img-big">
                 <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
@@ -27,12 +21,13 @@
                                 class="new-item-cat">{{$post->categories->title}}</span></a>
                         <span class="new-item-author">{{$post->user->fullname}}</span>
                         <span class="new-item-cre-at">{{date_format($post->created_at,"d-m-Y")}}</span>
+                        <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$post->views}}</span>
                     </p>
                 </a>
                 <div class="posts-item-desc-big">
                     <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
                         <p class="posts-item-desc-content">
-                            {{$post->description}}
+                            {!! $post->description !!}
                         </p>
                     </a>
 
@@ -48,7 +43,7 @@
 
                     <p class="posts-item-desc-content">
                         <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                            {{$post->description}}
+                            {!! $post->description  !!}
                         </a>
 
                     </p>

@@ -29,6 +29,8 @@
                                         <a href="{{route('frontend.list-post-by-category',$posts[0]->categories->slug)}}"> <span class="new-item-cat">{{$posts[0]->categories->title}}</span></a>
                                         <span class="new-item-author">{{$posts[0]->user->fullname}}</span>
                                         <span class="new-item-cre-at">{{date_format($posts[0]->created_at,"d-m-Y")}}</span>
+                                        <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$posts[0]->views}}</span>
+
                                     </div>
                                     <div class="item-desc-content">
                                         {{$posts[0]->description}}
@@ -54,6 +56,8 @@
                                         <a href="{{route('frontend.list-post-by-category',$posts[0]->categories->slug)}}"> <span class="new-item-cat">{{$posts[1]->categories->title}}</span></a>
                                         <span class="new-item-author">{{$posts[1]->user->fullname}}</span>
                                         <span class="new-item-cre-at">{{date_format($posts[1]->created_at,'d-m-Y')}}</span>
+                                        <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$posts[1]->views}}</span>
+
                                     </div>
                                     <div class="item-desc-content">
                                         {{$posts[1]->description}}
@@ -75,6 +79,8 @@
                                             <a href="{{route('frontend.list-post-by-category',$posts[2]->categories->slug)}}"> <span class="new-item-cat">{{$posts[2]->categories->title}}</span></a>
                                             <span class="new-item-author">{{$posts[2]->user->fullname}}</span>
                                             <span class="new-item-cre-at">{{date_format($posts[2]->created_at,'d-m-Y')}}</span>
+                                            <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$posts[2]->views}}</span>
+
                                         </div>
                                         <div class="item-desc-content">
                                             {{$posts[2]->description}}
@@ -90,8 +96,9 @@
             </div>
         </div>
         {{--    @include('frontend.inc.video')--}}
+        <div id="data-table">
         @include('frontend.inc.list_post')
-
+        </div>
     </div>
     <div id="footer">
 
@@ -99,5 +106,32 @@
 
 
 @endsection
+@section('script')
+    <script>
+
+     $(document).ready(function () {
+         $(document).on('click', '.pagination a', function (event) {
+
+
+             event.preventDefault();
+                 var page = $(this).attr('href').split('page=')[1];
+                 getMorePosts(page);
+             }
+         )
+         function getMorePosts(page) {
+             $.ajax({
+                 url: "{{route('frontend.get-more-posts')}}" + "?page=" + page,
+                 type: "GET",
+                 success: function (data) {
+                     $('#data-table').html(data);
+                 }
+
+             });
+         }
+
+     })
+
+    </script>
+    @endsection
 
 

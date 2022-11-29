@@ -130,38 +130,30 @@
                                     <div style="display: flex;justify-content: space-between">
                                         <div>
                                             <label>Tag</label>
-                                            <ul class="list-tag-choose">
-                                                @foreach($tags as $tag)
-                                                    <li class="list-tag-choose-item">
-                                                        <input type="checkbox" name="tagcheck[]" checked value="{{\App\Models\Tag::find($tag->tag_id)->id}}" hidden>{{\App\Models\Tag::find($tag->tag_id)->name}}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+
                                         </div>
                                         <p class="add-tag">add</p>
                                     </div>
-                                    <input type="text" name="tag" id="tag" class="form-control"
-                                           placeholder="choose tag"/>
-                                    <ul id="list-tag" class="list-tag">
-                                        @foreach(\App\Models\Tag::all() as $tag)
-                                            <li class="list-tag-item" data-value="{{$tag->name}}"
-                                                data-id="{{$tag->id}}">{{$tag->name}}</li>
-                                        @endforeach
-                                    </ul>
+                                    <select class="js-example-basic-multiple form-control" name="tagcheck[]" multiple="multiple" id="mySelect2Tag">
+
+                                    </select>
+
 
                                 </div>
 
 
                                 <div class="form-group">
                                     <label for="description">Mô tả ngắn</label>
-                                    <input value="{{ $post->description }}" type="text" name="description" class="form-control" id="description" placeholder="Enter description">
+                                    <textarea value=""  name="description" class="form-control ckeditor" id="description" placeholder="Enter description">
+                                    {!! $post->description !!}
+                                    </textarea>
                                 </div>
                                 @error('description')
                                 <p class="text-danger">{{$message}}</p>
                                 @enderror
                                 <div class="form-group">
                                     <label for="content">Mô tả chi tiết</label>
-                                    <textarea name="content" id="content" class="form-control" placeholder="Enter content">{!! $post->content !!} </textarea>
+                                    <textarea name="content" id="content" class="form-control ckeditor" placeholder="Enter content">{!! $post->content !!} </textarea>
                                 </div>
                                 @error('content')
                                 <p class="text-danger">{{$message}}</p>
@@ -181,11 +173,11 @@
                                 <div class="form-group">
                                     <label>Kích hoạt</label>
                                     <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" value="1" type="radio" id="active" name="status" {{ $post->status == 1 ? 'checked' : ''}}>
+                                        <input class="custom-control-input" value="1" type="radio" id="active" name="status" {{ $post->active == 1 ? 'checked' : ''}}>
                                         <label for="active" class="custom-control-label">Có</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" value="0" type="radio" id="no_active" name="status" {{ $post->status == 0 ? 'checked' : ''}}>
+                                        <input class="custom-control-input" value="0" type="radio" id="no_active" name="status" {{ $post->active == 0 ? 'checked' : ''}}>
                                         <label for="no_active" class="custom-control-label">Không</label>
                                     </div>
                                 </div>
@@ -217,6 +209,33 @@
         };
 
         $(document).ready(function () {
+
+            //handle to set selected tags before
+         let postId = "{{$post->id}}";
+         let url = "{{route('admin.tags.get-tags','')}}" + '/'+ postId;
+         let tags = $('#mySelect2Tag');
+         $.ajax({
+             url: url,
+             dataType:'json',
+             type:'GET',
+
+         }).then(function (data){
+             var length = data.length;
+             for(var i= 0; i < length; i++){
+                 var option = new Option(data[i].text, data[i].id,true,true);
+                 tags.append(option).trigger('change');
+             }
+             // manually trigger the `select2:select` event
+
+             tags.trigger({
+                 type: 'select2:select',
+                 params: {
+                     data: data,
+                 }
+             });
+         })
+
+
             $('.add-tag').click(function(){
                 $('.model-over').css('display','flex');
             })

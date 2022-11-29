@@ -53,6 +53,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Post::class,'author')->oldestOfMany();
     }
+    public function categories()
+    {
+        return $this->hasMany(Category::class,'creator');
+    }
 
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 use App\Helpers\Helpers;
@@ -25,29 +26,35 @@ class PostController extends Controller
         if(!empty($request->search))
         {
            $posts = Post::where('title','like',"%$request->search%")->paginate(10)
-           ->appends($request->all());
+           ->withQueryString();
         }
         else{
             $filter_by_cat = $request->category_id ?? "";
             $filter_by_tag = $request->tag_id ?? "";
+            //hanle if filter by tag is not
             if(!empty($filter_by_cat) && empty($filter_by_tag) ){
                 $posts = Post::where('category',$filter_by_cat)
-                    ->paginate(10)->appends($request->all());
+                    ->paginate(10)->withQueryString();
             }
+            //hanle if filter by cat is not
             elseif(!empty($filter_by_tag) && empty($filter_by_cat))
             {
-                $posts = Post::join('post_tags',function ($join) use ($filter_by_tag){
-                    $join->on('posts.id','=','post_tags.post_id')->where('tag_id',$filter_by_tag);
-                })->paginate(10)->appends($request->all());
+
+                $posts = Post::whereHas('tags',function (Builder $query) use ($filter_by_tag){
+                      $query->where('tag_id',$filter_by_tag);
+                })->paginate(10)->withQueryString();
             }
+            //hanle if filter by both tag and cat
             elseif(!empty($filter_by_tag) && !empty($filter_by_cat))
             {
-                $posts = Post::join('post_tags',function ($join) use ($filter_by_tag){
-                    $join->on('posts.id','=','post_tags.post_id')->where('tag_id',$filter_by_tag);
-                })->where('category',$filter_by_cat)->paginate(10)->appends($request->all());
+                $posts = Post::whereHas('tags',function (Builder $query) use ($filter_by_tag){
+                    $query->where('tag_id',$filter_by_tag);
+                })
+                    ->where('category',$filter_by_cat)->paginate(10)->withQueryString();
+
             }
             else{
-                $posts = Post::paginate(10)->appends($request->all());
+                $posts = Post::paginate(10)->withQueryString();
                 $isFilter = false;
             }
         }
@@ -122,8 +129,11 @@ class PostController extends Controller
             $categories = Category::whereNull('category_id')
                 ->with('childrenCategories')
                 ->get();
-            $tags = PostTags::where('post_id', $id)->get();
-            return view('admin.posts.edit', compact('title', 'post', 'categories', 'tags'));
+//            $tags = Tag::whereHas('posts',function (Builder $query) use($id){
+//                 $query->where('post_id',$id);
+//            })->pluck('id')->toArray();
+
+            return view('admin.posts.edit', compact('title', 'post', 'categories'));
         }
 
         return back()->with('nopermission',"Ban không có quyền chỉnh sửa bài viết này");
@@ -151,22 +161,30 @@ class PostController extends Controller
         $post->category = $request->category;
         $post->description = $request->description;
         $post->content = $request->input('content');
+        $post->active = $request->status;
         if ($request->hasFile('thumb')) {
             $name = $request->file('thumb')->getClientOriginalName();
             $path = $request->thumb->storeAs('public/posts', $name);
             $post->thumb = 'storage/posts/' . $name;
         }
         $post->save();
-        $list_tags = PostTags::select('tag_id')->where('post_id', $id)->get()->toArray();
-        $list_old_tags = array_column($list_tags, 'tag_id');
+
+        // check and handle these tags that was removed and that have just add
+        // list tags that have chosen before
+        $list_old_tags  = PostTags::where('post_id', $id)->pluck('id')->toArray();
+
+        //list tags that have justs add
         $list_edit_tags = $request->tagcheck;
         if($list_edit_tags) {
             $list_delete_tag = array_diff($list_old_tags, $list_edit_tags);
             $list_add_tag = array_diff($list_edit_tags, $list_old_tags);
 
+
+            //delete
             foreach ($list_delete_tag as $tag) {
                 PostTags::where('post_id', $id)->where('tag_id', (int)$tag)->delete();
             }
+            //add
             foreach ($list_add_tag as $tag) {
                 $postTag = new PostTags();
                 $postTag->post_id = $id;
@@ -182,15 +200,14 @@ class PostController extends Controller
         $auth_id = Auth::user()->id;
         $role = Auth::user()->role;
         $post = Post::find($id);
+        //check permission
         if ($role == 1 || $post->author == $auth_id) {
-
+          //check if whether post has relative to any tags
             if(PostTags::where('post_id',$id)->count())
             {
                 return back()->with('failure',"Bài viết còn liên quan đến các mục khác..chưa thể xóa");
 
             }
-
-
           Post::destroy($id);
           return back()->with('success','Deleted!');
         }
@@ -211,6 +228,14 @@ class PostController extends Controller
         $list_tags = Tag::where('name','like',"%$search%")->get();
         return json_encode($list_tags);
     }
+
+    }
+    public function getMorePosts(Request $request)
+    {
+        if($request->ajax()){
+            $posts = Post::paginate(10);
+            return view('admin.inc.post_data',compact('posts'))->render();
+        }
 
     }
 

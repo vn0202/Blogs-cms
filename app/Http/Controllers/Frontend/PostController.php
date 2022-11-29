@@ -21,9 +21,9 @@ class PostController extends Controller
         $category = $_GET['category'] ?? 0;
         if ($last_number) {
             if (!$category) {
-                $posts = Post::limit(5)->offset($last_number)->get();
+                $posts = Post::where('active',1)->limit(5)->offset($last_number)->get();
             } else {
-                $posts = Post::where('category',$category)->limit(5)->offset($last_number)->get();
+                $posts = Post::where('active',1)->where('category',$category)->limit(5)->offset($last_number)->get();
             }
             foreach ($posts as &$post) {
                 $post->author = $post->user;
