@@ -24,6 +24,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'avatar'=>"asset/admin/dist/img/avatar5.png",
             'password' => Hash::make('Nghiavu123@'), // password
 
         ];

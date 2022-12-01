@@ -80,97 +80,9 @@
         }
     }
 
-    document.getElementById('.btn-search').addEventListener('click',function (e){
-        e.preventDefault();
-    })
-
-    //handle click to see more
-    {{--    $(document).ready(function(){--}}
-    {{--    $('.see-more').click(function (){--}}
-    {{--        let last_number = $('.list-posts > div:nth-last-child(1)').attr('data-id');--}}
-    {{--        $.ajax(--}}
-    {{--            {--}}
-    {{--                url: "{{route('frontend.handle-click-see')}}",--}}
-    {{--                method:"GET",--}}
-    {{--                data:{--}}
-    {{--                    _token:"{{csrf_token()}}",--}}
-    {{--                    last_number:last_number,--}}
-    {{--                    category: {{$_GET['category'] ?? 0}}--}}
-    {{--                },--}}
-
-    {{--                dataType:'json',--}}
-    {{--                success:function (response)--}}
-    {{--                {--}}
-    {{--                    console.log(response);--}}
-    {{--                    let id = last_number;--}}
-    {{--                    let leng = response.length;--}}
-    {{--                    let html=``;--}}
-    {{--                    for( var i= 0; i < leng; i++ )--}}
-    {{--                    {--}}
-    {{--                        id++;--}}
-    {{--                        html += `<div class="posts-item" data-id="${id}">--}}
-
-    {{--        <div class="posts-item-img-big">--}}
-    {{--            <a href="detail.html">--}}
-    {{--                <img src="${response[i].thumb}" alt="Hinh anh" class="posts-item-img">--}}
-    {{--                <img src="{{asset('asset/frontend/images/icons/heart-white.png')}}" alt="" class="post-icon-fav">--}}
-    {{--            </a>--}}
-    {{--        </div>--}}
-    {{--        <div class="posts-item-infor">--}}
-    {{--            <a href="detail.html">--}}
-    {{--                <p class="posts-item-title">${response[i].title}</p>--}}
-    {{--                <p class="posts-infor">--}}
-    {{--                    <a href="social.html"> <span--}}
-    {{--                            class="new-item-cat">${response[i].category.title}</span></a>--}}
-    {{--                     <span class="new-item-author">${response[i].user.fullname}</span>--}}
-    {{--                    <span class="new-item-cre-at">${response[i].created_at}</span>--}}
-    {{--                </p>--}}
-    {{--            </a>--}}
-    {{--            <div class="posts-item-desc-big">--}}
-    {{--                <a href="detail.html">--}}
-    {{--                    <p class="posts-item-desc-content">--}}
-    {{--                     ${response[i].description}--}}
-    {{--                    </p>--}}
-    {{--                </a>--}}
-
-    {{--            </div>--}}
-    {{--            <div class="posts-item-desc">--}}
-    {{--                <div class="posts-item-img">--}}
-    {{--                    <a href="detail.html">--}}
-    {{--                        <img src=${response[i].thumb} alt="Hinh anh">--}}
-    {{--                        <img src="{{asset('asset/frontend/images/icons/heart-white.png')}}" alt=""--}}
-    {{--                             class="post-icon-fav">--}}
-    {{--                    </a>--}}
-    {{--                </div>--}}
-
-    {{--                <p class="posts-item-desc-content">--}}
-    {{--                    <a href="detail.html">--}}
-
-    {{--                      ${response[i].description}--}}
-    {{--                    </a>--}}
-
-    {{--                </p>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-
-    {{--    </div>`--}}
-    {{--                    }--}}
 
 
-    {{--                    $('.list-posts').append(html);--}}
-    {{--                },--}}
-    {{--                error:function (xhr,status,error)--}}
-    {{--                {--}}
-    {{--                    alert(error);--}}
-    {{--                }--}}
 
-
-    {{--            }--}}
-
-    {{--        )--}}
-
-    {{--    })--}}
-    {{--})--}}
 
 </script>
 @yield('script')

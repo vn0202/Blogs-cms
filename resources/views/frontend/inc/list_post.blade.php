@@ -9,7 +9,7 @@
 
             <div class="posts-item-img-big">
                 <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                    <img src="{{asset($post->thumb)}}" alt="Hinh anh" class="posts-item-img" style="width:100%">
+                    <img src="{{asset($post->thumb)}}" alt="Hinh anh" class="posts-item-img" style="width:100%;border-radius: 16px">
                     <img src="{{asset('asset/frontend/images/icons/heart-white.png')}}" alt="" class="post-icon-fav">
                 </a>
             </div>
@@ -35,7 +35,7 @@
                 <div class="posts-item-desc">
                     <div class="posts-item-img">
                         <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                            <img src="{{asset($post->thumb)}}" alt="Hinh anh">
+                            <img src="{{asset($post->thumb)}}" alt="Hinh anh" style="border-radius: 16px">
                             <img src="{{asset('asset/frontend/images/icons/heart-white.png')}}" alt=""
                                  class="post-icon-fav">
                         </a>

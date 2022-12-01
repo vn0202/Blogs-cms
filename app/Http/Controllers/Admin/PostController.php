@@ -25,7 +25,7 @@ class PostController extends Controller
         $isFilter = true;
         if(!empty($request->search))
         {
-           $posts = Post::where('title','like',"%$request->search%")->paginate(10)
+           $posts = Post::with(['categories','user'])->where('title','like',"%$request->search%")->paginate(10)
            ->withQueryString();
         }
         else{
@@ -33,28 +33,28 @@ class PostController extends Controller
             $filter_by_tag = $request->tag_id ?? "";
             //hanle if filter by tag is not
             if(!empty($filter_by_cat) && empty($filter_by_tag) ){
-                $posts = Post::where('category',$filter_by_cat)
+                $posts = Post::with(['categories','user'])->where('category',$filter_by_cat)
                     ->paginate(10)->withQueryString();
             }
             //hanle if filter by cat is not
             elseif(!empty($filter_by_tag) && empty($filter_by_cat))
             {
 
-                $posts = Post::whereHas('tags',function (Builder $query) use ($filter_by_tag){
+                $posts = Post::with(['categories','user'])->whereHas('tags',function (Builder $query) use ($filter_by_tag){
                       $query->where('tag_id',$filter_by_tag);
                 })->paginate(10)->withQueryString();
             }
             //hanle if filter by both tag and cat
             elseif(!empty($filter_by_tag) && !empty($filter_by_cat))
             {
-                $posts = Post::whereHas('tags',function (Builder $query) use ($filter_by_tag){
+                $posts = Post::with(['categories','user'])->whereHas('tags',function (Builder $query) use ($filter_by_tag){
                     $query->where('tag_id',$filter_by_tag);
                 })
                     ->where('category',$filter_by_cat)->paginate(10)->withQueryString();
 
             }
             else{
-                $posts = Post::paginate(10)->withQueryString();
+                $posts = Post::with(['categories','user'])->paginate(10)->withQueryString();
                 $isFilter = false;
             }
         }
@@ -79,7 +79,7 @@ class PostController extends Controller
     {
         $title = "Bài viết";
         $post = Post::find($id);
-        $list_tags = PostTags::where('post_id', $id)->get();
+        $list_tags = PostTags::with(['categories','user'])->where('post_id', $id)->get();
 
         return view('admin.posts.show', compact('title', 'post', 'list_tags'));
 
@@ -233,7 +233,7 @@ class PostController extends Controller
     public function getMorePosts(Request $request)
     {
         if($request->ajax()){
-            $posts = Post::paginate(10);
+            $posts = Post::with(['categories','user'])->paginate(10);
             return view('admin.inc.post_data',compact('posts'))->render();
         }
 

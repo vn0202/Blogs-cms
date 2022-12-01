@@ -73,49 +73,9 @@
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </div>
-                        @foreach($relative_posts as $post)
-                        <div class="posts-item">
-
-                            <div class="posts-item-img-big" >
-                                <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}"> <img src="{{asset($post->thumb)}}" alt="Hinh anh" style="border-radius: 16px;width:100%"></a>
-                            </div>
-                            <div class="posts-item-infor">
-                                <p class="posts-item-title">
-                                    <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                                      {{$post->title}}
-                                    </a></p>
-                                <p class="posts-infor">
-                                    <a href="{{route('frontend.list-post-by-category',$post->categories->slug)}}"> <span class="new-item-cat">{{$post->categories->title}}</span></a>
-                                    <span class="new-item-author">{{$post->user->fullname}}</span>
-                                    <span class="new-item-cre-at">{{date_format($post->created_at,'d-m-Y')}}</span>
-                                    <span style="margin-left: 4px;font-size: 14px"><i class="fas fa-eye"></i>{{$post->views}}</span>
-
-                                </p>
-                                <div class="posts-item-desc-big">
-
-                                    <p class="posts-item-desc-content">
-                                        <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                                           {{$post->description}}
-                                        </a>
-                                    </p>
-
-                                </div>
-                                <div class="posts-item-desc">
-                                    <div class="posts-item-img">
-                                        <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                                            <img src="{{asset('asset/frontend/images/posts/img.png')}}" alt="Hinh anh" >
-                                        </a>
-                                    </div>
-                                    <p class="posts-item-desc-content">
-                                        <a href="{{route('frontend.detail-post',['category'=>$post->categories->slug,'slug'=>$post->slug])}}">
-                                            {{$post->description}}
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                        @endforeach
+                       <div id="posts-data">
+                           @include('frontend.inc.list_post')
+                       </div>
 
 
                     </div>
@@ -126,4 +86,9 @@
 
         </div>
 
+@endsection
+@section('script')
+    <script>
+
+    </script>
 @endsection

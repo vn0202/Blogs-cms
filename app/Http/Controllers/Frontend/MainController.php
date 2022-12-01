@@ -28,25 +28,42 @@ class MainController extends Controller
 
     public function list_post_by_category(Request $request,string $slug_cat)
     {
-        $cate= Category::where('slug',$slug_cat)->firstOrFail();
-        $title = $cate->title;
-        $category = $cate->id;
-        $posts = Post::whereHas('categories', function (Builder $query) use ($slug_cat) {
-            $query->where('slug', $slug_cat);
-        })->where('active','1')->paginate(10)->appends($request->all());
+        if(!$request->ajax()) {
 
+            $cate = Category::where('slug', $slug_cat)->firstOrFail();
+            $title = $cate->title;
+            $category = $cate->id;
+            $posts = Post::whereHas('categories', function (Builder $query) use ($slug_cat) {
+                $query->where('slug', $slug_cat);
+            })->where('active', '1')->paginate(10)->withQueryString();
+            return view('frontend.post_by_category',compact('title','posts','category'));
 
-   return view('frontend.post_by_category',compact('title','posts','category'));
+        }
+        else{
+            $posts = Post::whereHas('categories', function (Builder $query) use ($slug_cat) {
+                $query->where('slug', $slug_cat);
+            })->where('active', '1')->paginate(10)->withQueryString();
+            return view('frontend.inc.list_post',compact('posts'))->render();
+        }
+
     }
-    public function list_post_by_tag(Request $request, string $slug)
+    public function list_post_by_tag(Request $request, string $slug_tag)
     {
-        $category = "";
-        $tag = $slug;
-        $title = " Bai viet lien quan: ";
-        $posts = Post::whereHas('tags',function (Builder $query) use ($slug){
-            $query->where('slug',$slug);
-        })->where('active','1')->paginate(10)->appends($request->all());
-        return view('frontend.post_by_tag',compact('title','category','posts','tag'));
+        if(!$request->ajax()) {
+            $category = "";
+            $tag = $slug_tag;
+            $title = " Bai viet lien quan: ";
+            $posts = Post::whereHas('tags', function (Builder $query) use ($slug_tag) {
+                $query->where('slug', $slug_tag);
+            })->where('active', '1')->paginate(10)->appends($request->all());
+            return view('frontend.post_by_tag', compact('title', 'category', 'posts', 'tag'));
+        }
+        else{
+            $posts = Post::whereHas('tags', function (Builder $query) use ($slug_tag) {
+                $query->where('slug', $slug_tag);
+            })->where('active', '1')->paginate(10)->withQueryString();
+            return view('frontend.inc.list_post',compact('posts'))->render();
+        }
     }
   public function search(Request $request)
   {
@@ -67,10 +84,11 @@ class MainController extends Controller
       $post = Post::where('slug',$slug)->firstOrFail();
       $post->views++;
       $post->save();
-      $relative_posts = Post::whereHas('categories',function (Builder $query) use ($category){
+      //list relative posts
+      $posts = Post::whereHas('categories',function (Builder $query) use ($category){
           $query->where('slug',$category);
-      })->get();
-      return view('frontend.detail',compact('post','relative_posts'));
+      })->paginate(10)->withQueryString();
+      return view('frontend.detail',compact('post','posts'));
   }
 public function getMorePosts(Request $request)
 {

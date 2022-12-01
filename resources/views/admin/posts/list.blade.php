@@ -118,11 +118,17 @@
         }
 
         $(document).ready(function () {
+
+
             //handle pagination without reload page
             $(document).on('click', '.pagination a', function (event) {
                 event.preventDefault();
                 var page = $(this).attr('href').split('page=')[1];
                 getMorePosts(page);
+                //hanle set query for page
+                window.history.replaceState({},'',`?page=${page}`);
+
+
             })
 
             function getMorePosts(page) {
@@ -174,7 +180,14 @@
                     dataType: 'json',
                     success: function (response) {
                         let queryString = new URL(window.location.href);
+                          let domain = window.location.href.split('?')[0];
+                        queryString.searchParams.forEach(function (value,key){
 
+                            if(key != 'tag_id')
+                            {
+                                queryString.searchParams.delete(key);
+                            }
+                        })
                         if (response.length == 0) {
                             $('.list-categories').empty();
                             $('.list-categories').append('<li class="text-center">No result</li>')
@@ -183,7 +196,8 @@
                             let html = '';
                             for (var i = 0; i < len; i++) {
                                 queryString.searchParams.set('category_id', response[i].id);
-                                let newUrl = queryString.href;
+                                let newUrl = domain + "?" + queryString.searchParams.toString();
+                             console.log(newUrl)
                                 html += `<li class= "py-2 list-categories-item" data-id="${response[i].id}">
                                      <a href="${newUrl}" class="text-dark d-block"> ${response[i].title}</a>
                                          </li>`
@@ -214,6 +228,15 @@
                     dataType: 'json',
                     success: function (response) {
                         let queryString = new URL(window.location.href);
+                        let domain = window.location.href.split('?')[0];
+
+                        queryString.searchParams.forEach(function (value,key){
+
+                            if(key != 'category_id')
+                            {
+                                queryString.searchParams.delete(key);
+                            }
+                                })
                         if (response.length == 0) {
                             $('.list-tags').empty();
                             $('.list-tags').append('<li class="text-center">No result</li>')
@@ -222,7 +245,9 @@
                             let html = '';
                             for (var i = 0; i < len; i++) {
                                 queryString.searchParams.set('tag_id', response[i].id);
-                                let newUrl = queryString.href;
+
+                                let newUrl = domain + "?" + queryString.searchParams.toString();
+
                                 html += `<li class= "py-2 list-tag-item" data-id="${response.id}">
                                     <a href="${newUrl}" class="text-dark d-block">${response[i].name}</a>
                                          </li>`

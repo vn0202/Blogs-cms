@@ -22,11 +22,7 @@ class PostFactory extends Factory
             'storage/posts/giaotranhukrainegetty-crop-1655862677921-1665655230926-1666425840229.webp',
             'storage/posts/hinh-anh-suy-tu-1.jpg',
             'storage/posts/images.jpeg',
-            'storage/posts/moi.png',
-            'storgae/posts/nhan-van-la-gi-01.jpg',
-
-
-
+            'storage/posts/nhan-van-la-gi-01.jpg',
         ];
         $name = fake()->sentence();
         return [

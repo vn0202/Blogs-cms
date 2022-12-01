@@ -13,8 +13,8 @@
 </ul>
 
 <div>
-    <form action="{{route('frontend.search')}}" method="post">
-        @csrf
+    <form action="{{route('frontend.search')}}" method="get">
+
         <input type="text" placeholder="Tìm kiếm thông tin " style="padding:4px " name="search" id="search">
         <button class="btn btn-primary " id="btn-search">search </button>
     </form>

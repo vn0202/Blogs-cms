@@ -110,12 +110,16 @@
     <script>
 
      $(document).ready(function () {
+
          $(document).on('click', '.pagination a', function (event) {
-
-
              event.preventDefault();
                  var page = $(this).attr('href').split('page=')[1];
                  getMorePosts(page);
+                 //set query page
+             window.history.replaceState( {} , '', `?page=${page}` );
+             let top = $(window).height();
+                 window.scrollTo({ top: top*1.5, behavior: 'smooth' });
+
              }
          )
          function getMorePosts(page) {
