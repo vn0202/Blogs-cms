@@ -297,7 +297,7 @@
                 }
                 else {
                     $.ajax({
-                        url: "{{route('admin.tags.create-tag')}}",
+                        url: "{{route('admin.tags.create-tag-ajax')}}",
                         method: 'POST',
                         data: {
                             search: val,

@@ -25,14 +25,16 @@
             <p>Tags</p>
         </a>
     </li>
-
     <li class="nav-header text-uppercase font-weight-bold">Authentication</li>
+    @if(auth()->user()->role < 2 )
+
     <li class="nav-item">
         <a href="{{route('admin.users.list-users')}}" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>Users</p>
         </a>
     </li>
+    @endif
     <li class="nav-item">
         <a onclick="return confirm('Bạn có muốn đăng xuất ?')" href="{{route('logout')}}" class="nav-link">
             <i class="nav-icon fas fa-power-off"></i>

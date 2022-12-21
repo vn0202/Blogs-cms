@@ -26,7 +26,7 @@
                                           @if($list_tags->all())
                                                   @foreach($list_tags as $tag)
                                                 <span  style="background-color: #CCCCCC; border-radius: 16px;margin-right: 4px ">
-                                                #{{\App\Models\Tag::find($tag->tag_id)->name}}
+                                                {{$tag->name}}
                                                 </span>
 
                                             @endforeach

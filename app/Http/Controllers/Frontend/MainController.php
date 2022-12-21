@@ -26,60 +26,10 @@ class MainController extends Controller
         return view('frontend.index', compact('posts','category'));
     }
 
-    public function list_post_by_category(Request $request,string $slug_cat)
-    {
-        if(!$request->ajax()) {
 
-            $cate = Category::where('slug', $slug_cat)->firstOrFail();
-            $title = $cate->title;
-            $category = $cate->id;
-            $posts = Post::whereHas('categories', function (Builder $query) use ($slug_cat) {
-                $query->where('slug', $slug_cat);
-            })->where('active', '1')->paginate(10)->withQueryString();
-            return view('frontend.post_by_category',compact('title','posts','category'));
 
-        }
-        else{
-            $posts = Post::whereHas('categories', function (Builder $query) use ($slug_cat) {
-                $query->where('slug', $slug_cat);
-            })->where('active', '1')->paginate(10)->withQueryString();
-            return view('frontend.inc.list_post',compact('posts'))->render();
-        }
 
-    }
-    public function list_post_by_tag(Request $request, string $slug_tag)
-    {
-        if(!$request->ajax()) {
-            $category = "";
-            $tag = $slug_tag;
-            $title = " Bai viet lien quan: ";
-            $posts = Post::whereHas('tags', function (Builder $query) use ($slug_tag) {
-                $query->where('slug', $slug_tag);
-            })->where('active', '1')->paginate(10)->appends($request->all());
-            return view('frontend.post_by_tag', compact('title', 'category', 'posts', 'tag'));
-        }
-        else{
-            $posts = Post::whereHas('tags', function (Builder $query) use ($slug_tag) {
-                $query->where('slug', $slug_tag);
-            })->where('active', '1')->paginate(10)->withQueryString();
-            return view('frontend.inc.list_post',compact('posts'))->render();
-        }
-    }
-  public function search(Request $request)
-  {
-
-      $category = '';
-      $search = $request->search ?? "";
-      if($search)
-      {
-          $posts = Post::where('title','like',"%$search%")->where('active','1')->paginate(10)->appends($request->all());
-      }
-      else{
-          $posts = Post::where('active','1')->paginate(10)->appends($request->all());
-      }
-      return view('frontend.result_search',compact('posts','category'));
-  }
-  public function detail(string $category,string $slug)
+  public function show(string $category,string $slug)
   {
       $post = Post::where('slug',$slug)->firstOrFail();
       $post->views++;
@@ -90,13 +40,6 @@ class MainController extends Controller
       })->paginate(10)->withQueryString();
       return view('frontend.detail',compact('post','posts'));
   }
-public function getMorePosts(Request $request)
-{
-    if($request->ajax()){
-        $posts = Post::where('active','1')->paginate(10);
-        return view('frontend.inc.list_post',compact('posts'))->render();
-    }
 
-}
 
 }

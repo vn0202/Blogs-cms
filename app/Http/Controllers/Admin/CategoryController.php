@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use App\Models\Post;
+use App\Services\Admin\CategoryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
-
-use mysql_xdevapi\Exception;
-use Psy\Output\ProcOutputPager;
 
 class CategoryController extends Controller
 {
@@ -47,28 +42,15 @@ class CategoryController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $rules = [
-            'title' => ['required', 'unique:categories,title'],
-        ];
-        $message = [
-            'title.required' => "Bạn chưa nhập tên danh mục",
-        ];
-        $this->validate($request, $rules, $message);
-        $cat = new Category();
-        $cat->title = $request->title;
-        $cat->slug = Str::of($request->title)->slug('-');
-        $cat->creator = Auth::user()->id;
-        if ($request->category) {
-            $cat->category_id = $request->category;
-        }
-        $cat->save();
+      CategoryService::store($request);
         return back()->with('success', "Bạn đã thêm danh mục thành công ");
     }
 
-    public function edit(int $id)
+    public function update(int $id)
     {
+
         $title = "Chỉnh sửa danh mục";
         $categories = Category::whereNull('category_id')
             ->with('childrenCategories')
@@ -79,23 +61,12 @@ class CategoryController extends Controller
         return view('admin.category.edit', compact('categories', 'cat', 'title', 'cat_title'));
     }
 
-    public function handleEdit(Request $request, int $id)
+    public function save(UpdateCategoryRequest $request, int $id)
     {
-        $rules = [
-            'title'=>['required',Rule::unique('categories')->ignore($id)],
-        ];
-        $messages = [
-            'title.required'=>'Bạn không được để trống danh mục này',
-            'title.unique'=>"Danh mục này đã tồn tại"
-        ];
-        $this->validate($request, $rules, $messages);
-        $cat = Category::find($id);
-        $cat->title = $request->title;
-        $cat->category_id = $request->category;
-        $cat->save();
+        CategoryService::save($request, $id);
         return back()->with('success',"Update successfully");
     }
-    public function destroy(int $id)
+    public function delete(int $id)
     {
          $cat_relative = Category::where('category_id',$id)->count();
          if($cat_relative > 0)

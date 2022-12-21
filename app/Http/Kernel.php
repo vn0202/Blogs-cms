@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Admin\AdminPermission;
+use App\Http\Middleware\Admin\AuthorOrAdminRole;
 use App\Http\Middleware\Admin\CheckLogin;
 use App\Http\Middleware\Admin\CheckPermission;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -93,5 +94,6 @@ class Kernel extends HttpKernel
         'verifiedLogin'=>CheckLogin::class,
         'checkPermission'=>CheckPermission::class,
         'adminPermission'=>AdminPermission::class,
+        'authorOrAdminRole'=>AuthorOrAdminRole::class,
     ];
 }
